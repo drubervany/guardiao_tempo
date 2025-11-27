@@ -6,7 +6,17 @@ Um projeto Angular lúdico e interativo para ensinar História de forma divertid
 
 Este projeto foi criado especialmente para o Anthony, transformando o aprendizado de História em uma aventura interativa através do tempo usando Angular!
 
-## 🚀 Como Instalar e Executar
+## 🌐 Site no GitHub Pages
+
+O projeto está configurado para ser publicado automaticamente no GitHub Pages!
+
+**URL do site:** https://drubervany.github.io/guardiao_tempo/
+
+O deploy é automático sempre que você fizer push na branch `main`. O GitHub Actions irá:
+1. Fazer build do projeto Angular
+2. Publicar automaticamente no GitHub Pages
+
+## 🚀 Como Instalar e Executar Localmente
 
 ### Pré-requisitos
 - Node.js (versão 18 ou superior)
@@ -34,6 +44,11 @@ npm run build
 ```
 
 Os arquivos compilados estarão na pasta `dist/maquina-tempo-historia`
+
+**Para GitHub Pages:**
+```bash
+npm run build -- --base-href /guardiao_tempo/
+```
 
 ## 📁 Estrutura do Projeto
 
