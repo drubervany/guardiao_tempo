@@ -1,0 +1,340 @@
+<div class="page" *ngIf="mission">
+  <div class="container">
+    <div class="game-layout">
+      <div class="avatar-side">
+        <app-avatar></app-avatar>
+      </div>
+      <div class="mission-side">
+        <app-hud></app-hud>
+        <div class="mission-header">
+          <button class="btn-back" (click)="goBack()">← Voltar</button>
+          <div class="title-with-info">
+            <h1 class="mission-title">{{ mission.title }}</h1>
+            <button *ngIf="mission.showImageIcon || (!mission.textContent && mission.image)" class="info-icon-btn" (click)="toggleOriginalImage()" title="Ver imagem original">
+              ❓
+            </button>
+          </div>
+        </div>
+
+    <div class="mission-content">
+      <!-- Seção: Conteúdo da Missão -->
+      <section class="mission-section">
+        <div class="image-container">
+          <!-- Se tem texto ou imagens, mostrar -->
+          <div *ngIf="(mission.textContent || mission.textImages) && !showOriginalImage" class="text-content-box">
+            <h3 class="text-content-title" *ngIf="mission.textTitle">{{ mission.textTitle }}</h3>
+            <!-- Imagens lado a lado se existirem -->
+            <div *ngIf="mission.textImages && mission.textImages.length > 0" class="text-images-container">
+              <div 
+                *ngFor="let img of mission.textImages; let i = index" 
+                class="text-image-wrapper">
+                <h4 class="text-image-title" *ngIf="mission.textImageTitles && mission.textImageTitles[i]">
+                  {{ mission.textImageTitles[i] }}
+                </h4>
+                <img 
+                  [src]="img" 
+                  [alt]="mission.textImageTitles && mission.textImageTitles[i] ? mission.textImageTitles[i] : (mission.textTitle || mission.title)"
+                  class="text-image">
+              </div>
+            </div>
+            <div class="text-content-body" *ngIf="mission.textContent">
+              <p *ngFor="let paragraph of getTextParagraphs()" class="text-paragraph">
+                {{ paragraph }}
+              </p>
+            </div>
+          </div>
+          
+          <!-- Mostrar imagem original quando clicar no ícone ? (apenas se tem textImages ou textContent) -->
+          <div *ngIf="showOriginalImage && (mission.textImages || mission.textContent)">
+            <div class="original-image-container">
+              <button class="close-image-btn" (click)="toggleOriginalImage()" title="Voltar">
+                ✕ Fechar imagem
+              </button>
+            </div>
+            <img 
+              [src]="mission.image" 
+              [alt]="mission.title" 
+              class="mission-image">
+          </div>
+          
+          <!-- Mostrar imagem quando não tem texto nem textImages (sempre visível) -->
+          <div *ngIf="!mission.textContent && !mission.textImages">
+            <img 
+              [src]="mission.image" 
+              [alt]="mission.title" 
+              class="mission-image">
+          </div>
+        </div>
+      </section>
+
+      <!-- Seção: Explicação -->
+      <section class="mission-section">
+        <h2>📖 Vamos Aprender!</h2>
+        <div class="explanation-text">
+          <p *ngFor="let paragraph of mission.explanation.split('\n')">{{ paragraph }}</p>
+        </div>
+      </section>
+
+      <!-- Seção: Atividade Interativa -->
+      <section class="mission-section">
+        <h2>🎮 Hora de Praticar!</h2>
+        <div class="activity-container">
+          <div class="activity-item" *ngFor="let activity of mission.activities; let activityIndex = index">
+            <div class="activity-question">{{ activity.question }}</div>
+            
+            <!-- Múltipla Escolha -->
+            <div class="options-container" *ngIf="activity.type === 'multiple-choice' && activity.options" [class.options-with-images]="hasImagesInOptions(activity)">
+              <button 
+                class="option-btn"
+                [class.has-image]="option.image"
+                *ngFor="let option of (shuffledOptions[activityIndex] || activity.options); let optionIndex = index"
+                (click)="checkAnswer(activityIndex, optionIndex, option.correct, option)">
+                <img *ngIf="option.image" [src]="option.image" [alt]="option.text" class="option-image">
+                <span class="option-text">{{ option.text }}</span>
+              </button>
+            </div>
+
+            <!-- Verdadeiro ou Falso -->
+            <div class="options-container" *ngIf="activity.type === 'true-false'">
+              <button 
+                class="option-btn"
+                (click)="checkTrueFalse(activityIndex, true, activity.correct === true)">
+                Verdadeiro ✅
+              </button>
+              <button 
+                class="option-btn"
+                (click)="checkTrueFalse(activityIndex, false, activity.correct === false)">
+                Falso ❌
+              </button>
+            </div>
+
+            <!-- Atividade de Match (Ligar Colunas) -->
+            <div class="match-container" *ngIf="activity.type === 'match' && activity.matchPairs">
+              <div class="match-instruction">Clique primeiro na imagem e depois no texto correspondente:</div>
+              <div class="match-columns">
+                <!-- Coluna de Imagens -->
+                <div class="match-column match-images-column">
+                  <div 
+                    class="match-image-item"
+                    *ngFor="let pair of shuffledMatchPairs[activityIndex]?.images || activity.matchPairs; let i = index"
+                    [class.selected]="selectedImageForMatch[activityIndex] === pair.matchId"
+                    [class.matched]="selectedMatches[activityIndex + '-' + pair.matchId] !== undefined"
+                    (click)="selectImageForMatch(activityIndex, pair.matchId)">
+                    <div class="match-image-box">
+                      <img [src]="pair.image" [alt]="'Imagem ' + (i + 1)" class="match-image">
+                    </div>
+                    <div class="match-check" *ngIf="selectedMatches[activityIndex + '-' + pair.matchId] !== undefined">✅</div>
+                  </div>
+                </div>
+                
+                <!-- Coluna de Textos -->
+                <div class="match-column match-texts-column">
+                  <button 
+                    class="match-text-btn"
+                    *ngFor="let pair of shuffledMatchPairs[activityIndex]?.texts || activity.matchPairs"
+                    [class.selected]="selectedMatches[activityIndex + '-' + pair.matchId] === pair.description"
+                    [class.correct]="selectedMatches[activityIndex + '-' + pair.matchId] === pair.description"
+                    (click)="selectMatch(activityIndex, pair.matchId, pair.description)">
+                    {{ pair.description }}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fiscal do Meio Ambiente -->
+            <div class="environment-container" *ngIf="activity.type === 'environment-check' && activity.environmentImages">
+              <div class="environment-instruction">Veja cada imagem e diga se tem problema ambiental:</div>
+              <div class="environment-images">
+                <div class="environment-item" *ngFor="let envImg of activity.environmentImages; let i = index">
+                  <img [src]="envImg.image" [alt]="'Imagem ' + (i + 1)" class="environment-image">
+                  <div class="environment-options">
+                    <button 
+                      class="env-btn"
+                      [class.correct]="isEnvironmentCorrect(i) === true"
+                      [class.incorrect]="isEnvironmentCorrect(i) === false"
+                      (click)="checkEnvironment(activityIndex, i, true)">
+                        Tem problema
+                    </button>
+                    <button 
+                      class="env-btn"
+                      [class.correct]="isEnvironmentCorrect(i) === false"
+                      [class.incorrect]="isEnvironmentCorrect(i) === true"
+                      (click)="checkEnvironment(activityIndex, i, false)">
+                        Não tem problema
+                    </button>
+                  </div>
+                  <div class="problem-description" *ngIf="envImg.problemDescription && ((envImg.hasProblem && isEnvironmentCorrect(i) === true) || (!envImg.hasProblem && isEnvironmentCorrect(i) === false))">
+                    {{ envImg.problemDescription }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Desafio Bônus (quando perde todos os corações) -->
+      <!-- Animação de coração recuperado -->
+      <div class="heart-recovery-animation" *ngIf="showHeartAnimation">
+        <div class="heart-card">
+          <div class="heart-icon">❤️</div>
+          <div class="heart-message">Vida recuperada!</div>
+        </div>
+      </div>
+
+      <!-- Card de Perda de Moedas -->
+      <div class="coins-loss-animation" *ngIf="showCoinsLossCard">
+        <div class="coins-loss-card">
+          <div class="coins-loss-icon">💸</div>
+          <div class="coins-loss-title">Ops! Resposta Incorreta</div>
+          <div class="coins-loss-amount">
+            <span class="coins-icon">💎</span>
+            <span class="coins-number">-{{ coinsLost }}</span>
+          </div>
+          <div class="coins-loss-hearts">
+            <div class="hearts-label">❤️ Vidas</div>
+            <div class="hearts-display">
+              <span *ngFor="let hasHeart of getCurrentHeartsArray()" class="heart-display" [class.full]="hasHeart" [class.empty]="!hasHeart">
+                {{ hasHeart ? '❤️' : '🤍' }}
+              </span>
+            </div>
+          </div>
+          <div class="coins-loss-message">Tente novamente! 😊</div>
+          <div class="coins-flying coin-1">
+            <span class="coin">💎</span>
+          </div>
+          <div class="coins-flying coin-2">
+            <span class="coin">💎</span>
+          </div>
+          <div class="coins-flying coin-3">
+            <span class="coin">💎</span>
+          </div>
+          <div class="coins-flying coin-4">
+            <span class="coin">💎</span>
+          </div>
+          <div class="coins-flying coin-5">
+            <span class="coin">💎</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Popup Modal do Desafio Bônus -->
+      <div class="bonus-popup-overlay" *ngIf="showBonusChallenge && !bonusChallengeCompleted && mission" (click)="closeBonusPopup()">
+        <div class="bonus-popup" (click)="$event.stopPropagation()">
+          <div class="bonus-popup-header">
+            <h2>💪 Desafio Bônus!</h2>
+            <button class="close-popup-btn" (click)="closeBonusPopup()" *ngIf="false">✕</button>
+          </div>
+          <div class="bonus-popup-content">
+            <p class="bonus-warning">Você perdeu todos os corações! 😢</p>
+            <p class="bonus-message">Mas não desista! Responda esta pergunta para recuperar um coração! ❤️</p>
+            <div class="bonus-question" *ngIf="mission.bonusQuestion">
+              <p><strong>{{ mission.bonusQuestion }}</strong></p>
+              <div class="options-container">
+                <button 
+                  class="option-btn" 
+                  [class.selected]="bonusAnswerSelected === 'Sim'"
+                  (click)="selectBonusAnswer('Sim')">
+                  Sim
+                </button>
+                <button 
+                  class="option-btn"
+                  [class.selected]="bonusAnswerSelected === 'Não'"
+                  (click)="selectBonusAnswer('Não')">
+                  Não
+                </button>
+              </div>
+              <button 
+                class="btn-primary" 
+                [disabled]="!bonusAnswerSelected"
+                (click)="completeBonusChallenge()"
+                style="margin-top: 15px;">
+                Responder
+              </button>
+            </div>
+            <div class="bonus-question" *ngIf="!mission.bonusQuestion">
+              <p><strong>O que é uma comunidade?</strong></p>
+              <div class="options-container">
+                <button 
+                  class="option-btn"
+                  [class.selected]="bonusAnswerSelected === 'Um conjunto de pessoas que compartilham um espaço'"
+                  (click)="selectBonusAnswer('Um conjunto de pessoas que compartilham um espaço')">
+                  Um conjunto de pessoas que compartilham um espaço
+                </button>
+                <button 
+                  class="option-btn"
+                  [class.selected]="bonusAnswerSelected === 'Apenas uma pessoa'"
+                  (click)="selectBonusAnswer('Apenas uma pessoa')">
+                  Apenas uma pessoa
+                </button>
+              </div>
+              <button 
+                class="btn-primary" 
+                [disabled]="!bonusAnswerSelected"
+                (click)="completeBonusChallenge()"
+                style="margin-top: 15px;">
+                Responder
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção: Resumo Final -->
+      <section class="mission-section success-section" id="success-section" style="display: none;">
+        <h2>🎉 Parabéns, Anthony!</h2>
+        <div class="success-message">
+          <p>{{ mission.successMessage }}</p>
+          <div class="reward-info" *ngIf="correctAnswers > 0">
+            <p>✅ Você acertou {{ correctAnswers }} de {{ totalQuestions }} perguntas!</p>
+          </div>
+        </div>
+        <button class="btn-primary" (click)="nextMission()" *ngIf="mission">
+          ➡️ Próxima Missão
+        </button>
+      </section>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Card Final - Todas as Missões Completadas -->
+<div class="final-card-overlay" *ngIf="showFinalCard" (click)="closeFinalCard()">
+  <div class="final-card" (click)="$event.stopPropagation()">
+    <div class="final-card-content">
+      <div class="final-card-header">
+        <h1 class="final-title">🎉 Parabéns, Anthony!</h1>
+        <div class="final-subtitle">Você completou todas as missões!</div>
+        <div class="final-message">Você é um verdadeiro explorador do tempo! 🏆</div>
+      </div>
+      
+      <div class="final-guardian-container">
+        <div class="final-avatar-wrapper">
+          <app-avatar></app-avatar>
+        </div>
+        <div class="final-guardian-title">🦸 Guardião da História 🦸</div>
+      </div>
+      
+      <div class="final-stats">
+        <div class="final-stat-item">
+          <span class="final-stat-icon">⭐</span>
+          <span class="final-stat-label">Nível {{ gameService.getPlayer().level }}</span>
+        </div>
+        <div class="final-stat-item">
+          <span class="final-stat-icon">💎</span>
+          <span class="final-stat-label">{{ gameService.getPlayer().coins }} Moedas</span>
+        </div>
+        <div class="final-stat-item">
+          <span class="final-stat-icon">🎁</span>
+          <span class="final-stat-label">{{ gameService.getPlayer().items.length }} Itens</span>
+        </div>
+      </div>
+      
+      <button class="final-card-btn" (click)="closeFinalCard()">
+        🏠 Voltar para Missões
+      </button>
+    </div>
+  </div>
+</div>
+

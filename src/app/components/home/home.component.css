@@ -1,0 +1,150 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  width: 100%;
+}
+
+.welcome-card {
+  background: white;
+  border-radius: 30px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  font-size: 2.5em;
+  color: #667eea;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.subtitle {
+  font-size: 1.5em;
+  color: #667eea;
+  margin-bottom: 15px;
+  font-weight: bold;
+  font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.intro-text {
+  text-align: left;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+.intro-paragraph {
+  font-size: 1.2em;
+  color: #555;
+  margin-bottom: 15px;
+  line-height: 1.6;
+  font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.intro-list {
+  text-align: left;
+  margin: 15px 0;
+  padding-left: 30px;
+  font-size: 1.1em;
+  color: #555;
+  line-height: 1.8;
+  font-family: 'Comic Sans MS', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.intro-list li {
+  margin-bottom: 10px;
+}
+
+.intro-question {
+  text-align: center;
+  font-size: 1.4em;
+  color: #667eea;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.time-machine {
+  margin: 30px 0;
+  font-size: 5em;
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.machine-body {
+  display: inline-block;
+}
+
+.sparks {
+  display: inline-block;
+  animation: sparkle 1.5s infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 20px 40px;
+  font-size: 1.3em;
+  border-radius: 50px;
+  cursor: pointer;
+  font-family: 'Comic Sans MS', sans-serif;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  transform: scale(1.05);
+  box-shadow: 0 7px 20px rgba(0, 0, 0, 0.4);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2em;
+  }
+  
+  .welcome-card {
+    padding: 30px 20px;
+  }
+}
+

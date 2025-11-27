@@ -1,0 +1,39 @@
+<div class="avatar-container">
+  <div class="avatar-label">Guardião Anthony</div>
+  <div class="avatar-wrapper">
+    <div class="avatar-roblox">
+      <!-- Corpo base -->
+      <div class="body-part body-base"></div>
+      
+      <!-- Cabeça -->
+      <div class="body-part head">
+        <!-- Olhos -->
+        <div class="eye eye-left"></div>
+        <div class="eye eye-right"></div>
+        <!-- Sorriso (aparece quando completar todas as missões - nível 12) -->
+        <div class="smile" *ngIf="player.level >= 12"></div>
+      </div>
+      
+      <!-- Itens conquistados -->
+      <div class="item shirt-community" *ngIf="hasItem('shirt_community')"></div>
+      <div class="item bag-helper" *ngIf="hasItem('bag_helper')"></div>
+      <div class="item hat-reporter" *ngIf="hasItem('hat_reporter')"></div>
+      <div class="item glasses-future" *ngIf="hasItem('glasses_future')"></div>
+      <div class="item cape-green" *ngIf="hasItem('cape_green')"></div>
+      <div class="item gloves-clean" *ngIf="hasItem('gloves_clean')"></div>
+      <div class="item broom-cleaner" *ngIf="hasItem('broom_cleaner')"></div>
+      <div class="item leaf-eco" *ngIf="hasItem('leaf_eco')"></div>
+      <div class="item recycle-badge" *ngIf="hasItem('recycle_badge')"></div>
+      <div class="item shopping-bag" *ngIf="hasItem('shopping_bag')"></div>
+      <div class="item briefcase-seller" *ngIf="hasItem('briefcase_seller')"></div>
+      <div class="item helmet-cleaner" *ngIf="hasItem('helmet_cleaner')"></div>
+      <div class="item badge-inspector" *ngIf="hasItem('badge_inspector')"></div>
+      
+      <!-- Efeito de brilho ao ganhar novo item -->
+      <div class="sparkle" *ngIf="player.items.length > 0">✨</div>
+    </div>
+  </div>
+  <div class="avatar-name">{{ player.name }}</div>
+  <div class="avatar-level">Nível {{ player.level }}</div>
+</div>
+

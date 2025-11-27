@@ -1,0 +1,24 @@
+<div class="page">
+  <div class="container">
+    <app-hud></app-hud>
+    <h1 class="page-title">🕰️ Suas Aventuras no Tempo</h1>
+    <div class="missions-grid">
+      <div 
+        *ngFor="let mission of missions" 
+        class="mission-card"
+        [class.locked]="!isUnlocked(mission.id)"
+        (click)="startMission(mission)">
+        <div class="mission-icon">{{ mission.icon }}</div>
+        <div class="mission-card-title">{{ mission.title }}</div>
+        <div class="mission-card-subtitle">
+          <span *ngIf="isUnlocked(mission.id)">Clique para começar!</span>
+          <span *ngIf="!isUnlocked(mission.id)">🔒 Complete a missão anterior</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-secondary" (click)="goHome()">
+      🏠 Voltar ao Início
+    </button>
+  </div>
+</div>
+

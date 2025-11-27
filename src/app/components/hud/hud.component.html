@@ -1,0 +1,33 @@
+<div class="hud-container">
+  <div class="hud-section">
+    <div class="hud-label">❤️ Vidas</div>
+    <div class="hearts-container">
+      <span 
+        *ngFor="let hasHeart of getHeartsArray(); let i = index" 
+        class="heart" 
+        [class.full]="hasHeart" 
+        [class.empty]="!hasHeart"
+        [class.clickable]="!hasHeart && player.coins >= 10 && player.hearts < player.maxHearts"
+        [title]="!hasHeart && player.coins >= 10 && player.hearts < player.maxHearts ? 'Clique para comprar vida (10 moedas)' : ''"
+        (click)="!hasHeart && player.coins >= 10 && player.hearts < player.maxHearts ? buyHeart() : null">
+        {{ hasHeart ? '❤️' : '🤍' }}
+      </span>
+    </div>
+  </div>
+
+  <div class="hud-section">
+    <div class="hud-label">⭐ Nível {{ player.level }}</div>
+    <div class="xp-container">
+      <div class="xp-bar">
+        <div class="xp-fill" [style.width.%]="getXpProgress()"></div>
+      </div>
+      <div class="xp-text">{{ player.xp }} XP</div>
+    </div>
+  </div>
+
+  <div class="hud-section">
+    <div class="hud-label">💰 Moedas</div>
+    <div class="coins-display">{{ player.coins }} 🪙</div>
+  </div>
+</div>
+

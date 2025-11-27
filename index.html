@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Máquina do Tempo da História - Anthony</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Página Inicial -->
+    <div id="home-page" class="page active">
+        <div class="container">
+            <div class="welcome-card">
+                <h1 class="title">🕰️ Máquina do Tempo da História</h1>
+                <p class="subtitle">Olá, Anthony! Bem-vindo à sua aventura pelo passado! 🎉</p>
+                <div class="time-machine">
+                    <div class="machine-body">⏰</div>
+                    <div class="sparks">✨</div>
+                </div>
+                <button class="btn-primary" onclick="showPage('missions-page')">
+                    🚀 Começar Missão
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Página de Missões -->
+    <div id="missions-page" class="page">
+        <div class="container">
+            <h1 class="page-title">📚 Escolha sua Missão</h1>
+            <div class="missions-grid" id="missions-grid">
+                <!-- Missões serão inseridas aqui via JavaScript -->
+            </div>
+            <button class="btn-secondary" onclick="showPage('home-page')">
+                🏠 Voltar ao Início
+            </button>
+        </div>
+    </div>
+
+    <!-- Página de Detalhe da Missão -->
+    <div id="mission-detail-page" class="page">
+        <div class="container">
+            <div class="mission-header">
+                <button class="btn-back" onclick="showPage('missions-page')">← Voltar</button>
+                <h1 class="mission-title" id="mission-title"></h1>
+            </div>
+
+            <div class="mission-content">
+                <!-- Seção: Olhar com Atenção -->
+                <section class="mission-section">
+                    <h2>👀 Olhe com Atenção!</h2>
+                    <div class="image-container">
+                        <img id="mission-image" src="" alt="Imagem da missão" class="mission-image">
+                    </div>
+                    <div class="observation-questions" id="observation-questions">
+                        <!-- Perguntas serão inseridas aqui -->
+                    </div>
+                </section>
+
+                <!-- Seção: Explicação -->
+                <section class="mission-section">
+                    <h2>📖 Vamos Aprender!</h2>
+                    <div class="explanation-text" id="explanation-text">
+                        <!-- Texto explicativo será inserido aqui -->
+                    </div>
+                </section>
+
+                <!-- Seção: Atividade Interativa -->
+                <section class="mission-section">
+                    <h2>🎮 Hora de Praticar!</h2>
+                    <div class="activity-container" id="activity-container">
+                        <!-- Atividades serão inseridas aqui -->
+                    </div>
+                </section>
+
+                <!-- Seção: Resumo Final -->
+                <section class="mission-section success-section" id="success-section" style="display: none;">
+                    <h2>🎉 Parabéns, Anthony!</h2>
+                    <div class="success-message" id="success-message"></div>
+                    <button class="btn-primary" onclick="nextMission()">
+                        ➡️ Próxima Missão
+                    </button>
+                </section>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
