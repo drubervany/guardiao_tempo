@@ -663,7 +663,7 @@ Hoje em dia, essa profissão está quase extinta porque as compras pela internet
           question: "2️⃣ Esse tipo de vendedor existe no seu bairro?",
           options: [
             { text: "Sim", correct: true },
-            { text: "Não", correct: false }
+            { text: "Não", correct: true }
           ]
         },
         {
@@ -678,10 +678,11 @@ Hoje em dia, essa profissão está quase extinta porque as compras pela internet
           type: "multiple-choice",
           question: "4️⃣ Onde você prefere comprar coisas?",
           options: [
-            { text: "Só pela internet", correct: false },
+            { text: "Só pela internet", correct: true },
             { text: "Indo ao mercado", correct: true },
-            { text: "Só na TV", correct: false }
-          ]
+            { text: "Só na TV", correct: true }
+          ],
+          allowMultiple: true
         }
       ],
       successMessage: "Perfeito! Você entendeu como a tecnologia mudou o comércio! 🚪💻"
