@@ -6,9 +6,41 @@ Um projeto Angular lúdico e interativo para ensinar História de forma divertid
 
 Este projeto foi criado especialmente para o Anthony, transformando o aprendizado de História em uma aventura interativa através do tempo usando Angular!
 
-## 🌐 Site no GitHub Pages
+## 🌐 Publicar o Site
 
-O projeto está configurado para ser publicado automaticamente no GitHub Pages!
+O projeto está configurado para ser publicado no **Netlify** (recomendado) ou no **GitHub Pages**!
+
+### 🚀 Opção 1: Netlify (Recomendado - Mais Fácil)
+
+**Vantagens:**
+- ✅ Deploy automático via GitHub
+- ✅ HTTPS gratuito
+- ✅ CDN global (rápido em qualquer lugar)
+- ✅ Domínio gratuito (ex: `seu-app-123.netlify.app`)
+- ✅ Sem limite de tráfego
+
+**Como fazer:**
+
+1. **Faça o build de produção:**
+   ```bash
+   npm run build:prod
+   ```
+
+2. **Acesse:** https://app.netlify.com
+   - Crie conta gratuita (pode usar GitHub)
+
+3. **Faça o deploy:**
+   - Arraste a pasta `dist/maquina-tempo-historia` para a área de deploy
+   - Ou conecte com GitHub para deploy automático (recomendado!)
+
+4. **Pronto!** Você receberá um link tipo: `https://seu-app-123.netlify.app`
+
+**✅ Deploy Automático (Já Configurado):**
+- Se você conectou o Netlify ao GitHub, cada `git push` para `main` faz deploy automático
+- Não precisa fazer nada manualmente!
+- Seu site atualiza automaticamente em alguns segundos após cada commit
+
+### 📦 Opção 2: GitHub Pages
 
 **URL do site:** https://drubervany.github.io/guardiao_tempo/
 
@@ -40,14 +72,14 @@ O projeto estará disponível em `http://localhost:4200`
 ### Build para Produção
 
 ```bash
-npm run build
+npm run build:prod
 ```
 
 Os arquivos compilados estarão na pasta `dist/maquina-tempo-historia`
 
 **Para GitHub Pages:**
 ```bash
-npm run build -- --base-href /guardiao_tempo/
+npm run build:prod -- --base-href /guardiao_tempo/
 ```
 
 ## 📁 Estrutura do Projeto
